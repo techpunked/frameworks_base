@@ -174,14 +174,25 @@ public final class TransferPipe implements Runnable {
     }
 
     public void kill() {
-        closeFd(0);
-        closeFd(1);
+        synchronized (this) {
+            mThread.interrupt();
+            closeFd(0);
+            closeFd(1);
+        }
     }
 
     @Override
     public void run() {
+        FileDescriptor readFd = null;
+        synchronized (this) {
+            if (mThread.isInterrupted()) {
+                if (DEBUG) Slog.i(TAG, "TransferPipe thread has been interrupted before run!");
+                return;
+            }
+            readFd = getReadFd().getFileDescriptor();
+        }
         final byte[] buffer = new byte[1024];
-        final FileInputStream fis = new FileInputStream(getReadFd().getFileDescriptor());
+        final FileInputStream fis = new FileInputStream(readFd);
         final FileOutputStream fos = new FileOutputStream(mOutFd);
 
         if (DEBUG) Slog.i(TAG, "Ready to read pipe...");
