@@ -105,19 +105,6 @@ public class WallpaperCropActivity extends Activity {
             return;
         }
 
-        // Action bar
-        // Show the custom action bar view
-        final ActionBar actionBar = getActionBar();
-        actionBar.setCustomView(R.layout.actionbar_set_wallpaper);
-        actionBar.getCustomView().setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        boolean finishActivityWhenDone = true;
-                        cropImageAndSetWallpaper(imageUri, null, finishActivityWhenDone);
-                    }
-                });
-
         // Load image in background
         final BitmapRegionTileSource.UriBitmapSource bitmapSource =
                 new BitmapRegionTileSource.UriBitmapSource(this, imageUri, 1024);
@@ -132,6 +119,21 @@ public class WallpaperCropActivity extends Activity {
             }
         };
         setCropViewTileSource(bitmapSource, true, false, onLoad);
+
+        // Action bar
+        // Show the custom action bar view
+        final ActionBar actionBar = getActionBar();
+        actionBar.setCustomView(R.layout.actionbar_set_wallpaper);
+        actionBar.getCustomView().setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (bitmapSource.getLoadingState() == BitmapSource.State.LOADED) {
+                            boolean finishActivityWhenDone = true;
+                            cropImageAndSetWallpaper(imageUri, null, finishActivityWhenDone);
+                        }
+                    }
+                });
     }
 
     public void setCropViewTileSource(
