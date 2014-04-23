@@ -1565,7 +1565,7 @@ public final class Pm {
         System.err.println("");
         System.err.println("pm path: print the path to the .apk of the given PACKAGE.");
         System.err.println("");
-        System.err.println("pm dump: print system state associated w ith the given PACKAGE.");
+        System.err.println("pm dump: print system state associated with the given PACKAGE.");
         System.err.println("");
         System.err.println("pm install: installs a package to the system.  Options:");
         System.err.println("    -l: install the package with FORWARD_LOCK.");
